@@ -5,11 +5,11 @@ import { findInReactTree } from "@vendetta/utils"
 
 const { View } = ReactNative
 
-const unpatch = after("render", View, (_, res) => {
-    const textChannel = findInReactTree(res, r => r?.props?.channel?.name && r?.props?.hasOwnProperty?.("isRulesChannel"))
+const unpatch = after("render", View, (_: any, res: any) => {
+    const textChannel = findInReactTree(res, (r: any) => r?.props?.channel?.name && r?.props?.hasOwnProperty?.("isRulesChannel"))
     if (!textChannel) return
-    after("type", textChannel.type, (_, res) => {
-        const textChannelName = findInReactTree(res, r => typeof r?.children === "string")
+    after("type", textChannel.type, (_: any, res: any) => {
+        const textChannelName = findInReactTree(res, (r: any) => typeof r?.children === "string")
         if (!textChannelName) return
         textChannelName.children = textChannelName.children.replace(/-/g, " ")
         return res
