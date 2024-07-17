@@ -1,7 +1,9 @@
-export interface DeepLResponse {
-    alternatives?: string[]
-    code?: number
-    message?: string
-    data?: string
-    id?: number
+export interface GoogleTranslateResponse {
+    src: string;
+    sentences: Array<{ trans: string }>;
+}
+
+export interface TranslationValue {
+    source_lang: string;
+    text: string;
 }
