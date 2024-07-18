@@ -1,7 +1,11 @@
 {
-    "name": "Dislate Lite",
+    "name": "Dislate Lite (updated)",
     "description": "Translates text into a desired language.",
     "authors": [
+        {
+            "name": "thelsn",
+            "id": "1076526141269102643"
+        },
         {
             "name": "Acquite <3",
             "id": "581573474296791211"
