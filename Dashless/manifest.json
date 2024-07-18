@@ -1,1 +1,1 @@
-{"name":"Dashless","description":"Port of enmity plugin","authors":[{"name":"sapphire","id":"757982547861962752"}],"main":"index.js","vendetta":{"icon":"ic_chat_bubble_16px"},"hash":"60e7519a83ebf875f778467f9b358c2e520787aae18c95684cba352519195a2b"}
+{"name":"Dashless","description":"Removes dashes from channel names","authors":[{"name":"thelson","id":"1076526141269102643"}],"main":"index.js","vendetta":{"icon":"ic_chat_bubble_16px"},"hash":"b32b237c5183710a75f2bbbe93d4c91dd91a9e5e6e9142558af00ff95a4d1177"}
