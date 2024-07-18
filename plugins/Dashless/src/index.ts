@@ -5,36 +5,39 @@ import { findInReactTree } from "@vendetta/utils";
 const { View } = ReactNative;
 
 const unpatch = after("render", View, (_, res) => {
-    // Function to recursively traverse React tree and replace "-" with " "
-    const traverseAndReplace = (node: any) => {
+    // Find the parent TextChannel component
+    const parentTextChannel = findInReactTree(res, r => (
+        r?.props?.children &&
+        r.props.children.type?.name === "TextChannel"
+    ));
+
+    if (!parentTextChannel) return;
+
+    // Function to recursively modify children
+    const modifyChildren = (node) => {
         if (typeof node === "string") {
             return node.replace(/-/g, " ");
         } else if (Array.isArray(node)) {
-            return node.map(traverseAndReplace);
-        } else if (typeof node === "object" && node !== null) {
-            const newNode: any = { ...node };
-            if (newNode.children) {
-                newNode.children = traverseAndReplace(newNode.children);
+            return node.map(modifyChildren);
+        } else if (node && typeof node === "object") {
+            // Check if this node is a TextChannel and modify children if necessary
+            if (node.type?.name === "TextChannel" && node.props?.children) {
+                node.props.children = modifyChildren(node.props.children);
             }
-            return newNode;
+            // Recursively traverse other props
+            Object.keys(node).forEach(key => {
+                if (node[key] && typeof node[key] === "object") {
+                    node[key] = modifyChildren(node[key]);
+                }
+            });
         }
         return node;
     };
 
-    // Find the node containing channel name text
-    const textChannel = findInReactTree(res, r =>
-        r?.props?.children?.props?.children === "channel-name"
-    );
+    // Modify children under the parent TextChannel component
+    parentTextChannel.props.children = modifyChildren(parentTextChannel.props.children);
 
-    if (!textChannel) return;
-
-    // Replace "-" with " " in the children of the found node
-    const updatedChildren = traverseAndReplace(textChannel.props.children);
-
-    // Update the node with the modified children
-    textChannel.props.children = updatedChildren;
-
-    return res;
+    return res; // Return the modified tree
 });
 
 export const onUnload = () => unpatch();
