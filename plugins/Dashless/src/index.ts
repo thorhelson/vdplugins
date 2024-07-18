@@ -5,37 +5,32 @@ import { findInReactTree } from "@vendetta/utils";
 const { View } = ReactNative;
 
 const unpatch = after("render", View, (_, res) => {
-    // Find the parent TextChannel component
-    const parentTextChannel = findInReactTree(res, r => (
+    // Find TextChannel components
+    const textChannels = findInReactTree(res, r => (
         r?.props?.children &&
         r.props.children.type?.name === "TextChannel"
     ));
 
-    if (!parentTextChannel) return;
+    if (!textChannels) return;
 
-    // Function to recursively modify children
-    const modifyChildren = (node) => {
-        if (typeof node === "string") {
-            return node.replace(/-/g, " ");
-        } else if (Array.isArray(node)) {
-            return node.map(modifyChildren);
-        } else if (node && typeof node === "object") {
-            // Check if this node is a TextChannel and modify children if necessary
-            if (node.type?.name === "TextChannel" && node.props?.children) {
-                node.props.children = modifyChildren(node.props.children);
-            }
-            // Recursively traverse other props
-            Object.keys(node).forEach(key => {
-                if (node[key] && typeof node[key] === "object") {
-                    node[key] = modifyChildren(node[key]);
-                }
+    // Function to recursively traverse and modify children
+    const traverseAndModify = (component) => {
+        if (component.props.children && typeof component.props.children === "string") {
+            component.props.children = component.props.children.replace(/-/g, " ");
+        }
+
+        // Recursively traverse child components
+        if (component.props.children && typeof component.props.children === "object") {
+            React.Children.forEach(component.props.children, child => {
+                traverseAndModify(child);
             });
         }
-        return node;
     };
 
-    // Modify children under the parent TextChannel component
-    parentTextChannel.props.children = modifyChildren(parentTextChannel.props.children);
+    // Traverse through each TextChannel component found
+    textChannels.forEach(textChannel => {
+        traverseAndModify(textChannel);
+    });
 
     return res; // Return the modified tree
 });
