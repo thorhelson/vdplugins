@@ -1,10 +1,10 @@
 {
     "name": "Dashless",
-    "description": "Port of enmity plugin",
+    "description": "Removes dashes from channel names",
     "authors": [
         {
-            "name": "sapphire",
-            "id": "757982547861962752"
+            "name": "thelson",
+            "id": "1076526141269102643"
         }
     ],
     "main": "src/index.ts",
