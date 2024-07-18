@@ -6,7 +6,7 @@ const { View } = ReactNative;
 
 const unpatch = after("render", View, (_, res) => {
     const anonymousForwardRefs = findInReactTree(res, r => (
-        typeof r?.props?.children === "string" && r.props.children.includes("-")
+        r?.props?.children && typeof r.props.children === "string" && r.props.children.includes("-")
     ));
     
     if (!anonymousForwardRefs) return;
