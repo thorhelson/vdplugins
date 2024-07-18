@@ -9,8 +9,9 @@ const unpatch = after("render", View, (_, res) => {
         r?.props?.children && typeof r.props.children === "string" && r.props.children.includes("-")
     ));
     
-    if (!anonymousForwardRefs) return;
+    if (!anonymousForwardRefs) return res; // Return original result if no matches found
     
+    // Modify each found instance of Anonymous ForwardRef
     anonymousForwardRefs.forEach(anonymousRef => {
         anonymousRef.props.children = anonymousRef.props.children.replace(/-/g, " ");
     });
